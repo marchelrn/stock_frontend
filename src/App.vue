@@ -92,7 +92,7 @@
           <li><code>DELETE /broker/:name</code></li>
           <li><code>GET /stocks</code></li>
           <li><code>POST /stock</code></li>
-          <li><code>DELETE /stock/:ticker</code></li>
+          <li><code>DELETE /stock/:tickers</code></li>
           <li><code>GET /prices?ticker=A,B,C</code> (optional)</li>
         </ul>
       </div>

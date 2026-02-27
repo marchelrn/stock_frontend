@@ -8,7 +8,7 @@
           <th>Avg Price</th>
           <th>Broker</th>
           <th>ID</th>
-          <th></th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -22,12 +22,20 @@
           <td>{{ holding.broker_name }}</td>
           <td><code>{{ holding.id }}</code></td>
           <td>
-            <button
-              class="action-btn delete"
-              @click="$emit('delete', holding.ticker)"
-            >
-              Delete
-            </button>
+            <div class="action-group">
+              <button
+                class="action-btn buy"
+                @click="$emit('trade', { type: 'BUY', holding })"
+              >
+                Buy
+              </button>
+              <button
+                class="action-btn sell"
+                @click="$emit('trade', { type: 'SELL', holding })"
+              >
+                Sell
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -45,7 +53,7 @@ defineProps({
   }
 })
 
-defineEmits(['delete'])
+defineEmits(['trade'])
 
 const { formatCurrency, formatNumber } = useFormatters()
 </script>

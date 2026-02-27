@@ -240,25 +240,15 @@ export function usePortfolio() {
     }
   }
 
-  const addHolding = async (payload) => {
+  // transaction-first flow: no direct addHolding action
+
+  const createTransaction = async (payload) => {
     try {
-      await api('/stock', {
+      await api('/transaction', {
         method: 'POST',
         body: JSON.stringify(payload)
       })
-      setStatus(`Holding ${payload.ticker} ditambahkan.`)
-      await loadDashboard({ silent: true })
-      return true
-    } catch (error) {
-      setStatus(error.message, true)
-      return false
-    }
-  }
-
-  const deleteHolding = async (ticker) => {
-    try {
-      await api(`/stock/${encodeURIComponent(ticker)}`, { method: 'DELETE' })
-      setStatus('Holding berhasil dihapus.')
+      setStatus(`Transaksi ${payload.type} ${payload.ticker} berhasil.`)
       await loadDashboard({ silent: true })
       return true
     } catch (error) {
@@ -288,8 +278,7 @@ export function usePortfolio() {
     loadDashboard,
     addBroker,
     deleteBroker,
-    addHolding,
-    deleteHolding,
+    createTransaction,
     fetchStockPrices
   }
 }

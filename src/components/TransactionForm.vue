@@ -2,6 +2,10 @@
   <form class="stack-form" @submit.prevent="handleSubmit">
     <h3>Add Transaction</h3>
 
+    <small v-if="validationMessage" :class="validationOk ? 'text-ok' : 'text-error'">
+      {{ validationMessage }}
+    </small>
+
     <label for="tx-type">Type</label>
     <select id="tx-type" v-model="type" required>
       <option value="BUY">BUY</option>
@@ -26,17 +30,13 @@
       @blur="validateBuyTicker"
     />
 
-    <small v-if="validationMessage" :class="validationOk ? 'text-ok' : 'text-error'">
-      {{ validationMessage }}
-    </small>
-
     <label for="tx-lot">Lot</label>
-    <input id="tx-lot" v-model.number="lot" type="number" min="1" required />
+    <input id="tx-lot" v-model.number="lot" type="number" required />
 
     <label for="tx-price">Harga per lembar</label>
-    <input id="tx-price" v-model.number="price" type="number" min="1" step="0.01" required />
+    <input id="tx-price" v-model.number="price" type="number" step="0.01" required />
 
-    <button type="submit" :disabled="submitting || !canSubmit">
+    <button type="submit" :disabled="submitting">
       {{ submitting ? 'Submitting...' : 'Submit Transaction' }}
     </button>
   </form>
@@ -82,9 +82,7 @@ const brokerOptions = computed(() => {
   return (props.brokers || []).filter((b) => ids.has(Number(b.id)))
 })
 
-const canSubmit = computed(() => {
-  return !!(brokerId.value && normalizedTicker.value && Number(lot.value) > 0 && Number(price.value) > 0)
-})
+// submit validation handled inside handleSubmit
 
 watch(type, (nextType) => {
   validationMessage.value = ''
@@ -116,7 +114,6 @@ watch([type, brokerId, normalizedTicker], () => {
     if (row) {
       validationOk.value = true
       validationMessage.value = 'Ticker tersedia untuk SELL di broker ini'
-      if (price.value <= 0) price.value = Number(row.avg_price || 0)
     } else {
       validationOk.value = false
       validationMessage.value = 'Ticker ini tidak ada di holding broker terpilih'
@@ -129,12 +126,9 @@ const validateBuyTicker = async () => {
   if (!normalizedTicker.value) return false
 
   try {
-    const res = await api(`/price/${encodeURIComponent(normalizedTicker.value)}`)
-    const marketPrice = Number(res?.data?.price || 0)
-
+    await api(`/price/${encodeURIComponent(normalizedTicker.value)}`)
     validationOk.value = true
     validationMessage.value = 'Ticker valid (terdaftar / bisa diambil dari IHSG via Yahoo)'
-    if (marketPrice > 0) price.value = marketPrice
     return true
   } catch {
     validationOk.value = false
@@ -144,10 +138,40 @@ const validateBuyTicker = async () => {
 }
 
 const handleSubmit = async () => {
-  if (!canSubmit.value || submitting.value) return
+  if (submitting.value) return
+
+  if (!brokerId.value) {
+    validationOk.value = false
+    validationMessage.value = 'Broker wajib dipilih'
+    return
+  }
+
+  if (!normalizedTicker.value) {
+    validationOk.value = false
+    validationMessage.value = 'Ticker wajib diisi'
+    return
+  }
+
+  const lotValue = Number(lot.value)
+  if (!Number.isFinite(lotValue) || lotValue <= 0) {
+    validationOk.value = false
+    validationMessage.value = 'Lot harus lebih besar dari 0'
+    return
+  }
+
+  const priceValue = Number(price.value)
+  if (!Number.isFinite(priceValue) || priceValue <= 0) {
+    validationOk.value = false
+    validationMessage.value = 'Harga per lembar harus lebih besar dari 0'
+    return
+  }
 
   const broker = (props.brokers || []).find((b) => Number(b.id) === Number(brokerId.value))
-  if (!broker) return
+  if (!broker) {
+    validationOk.value = false
+    validationMessage.value = 'Broker tidak ditemukan'
+    return
+  }
 
   if (type.value === 'BUY') {
     const ok = await validateBuyTicker()
@@ -172,12 +196,15 @@ const handleSubmit = async () => {
       ticker: normalizedTicker.value,
       broker_id: Number(broker.id),
       broker_name: broker.name,
-      lot: Number(lot.value),
-      price: Number(price.value)
+      lot: lotValue,
+      price: priceValue
     })
 
     ticker.value = ''
     lot.value = 1
+    price.value = 0
+    validationMessage.value = ''
+    validationOk.value = false
   } finally {
     submitting.value = false
   }

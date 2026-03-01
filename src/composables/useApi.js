@@ -1,9 +1,12 @@
 import { ref } from 'vue'
 
-// Get base URL from environment variable or localStorage or default
-const defaultUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080'
-const baseUrl = ref(defaultUrl)
+const env = String(import.meta.env.VITE_ENV || '').toUpperCase()
+const isDevelopment = env === 'DEVELOPMENT'
+const localhostUrl = 'http://localhost:3030'
+const renderUrl = import.meta.env.VITE_API_URL || 'https://stock-api-8ftf.onrender.com'
 
+const defaultUrl = isDevelopment ? localhostUrl : renderUrl
+const baseUrl = ref(defaultUrl.replace(/\/$/, ''))
 export function useApi() {
   const setBaseUrl = (url) => {
     baseUrl.value = url.trim().replace(/\/$/, '')

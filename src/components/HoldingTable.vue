@@ -26,7 +26,7 @@
               <button
                 class="action-btn buy"
                 @click="$emit('trade', { type: 'BUY', holding })"
-              >
+              > 
                 Buy
               </button>
               <button

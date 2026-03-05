@@ -90,4 +90,3 @@ npm run preview
 
 - Frontend ini menggunakan Vue 3 Composition API dengan `<script setup>` syntax
 - State management menggunakan Vue composables (tidak perlu Vuex/Pinia untuk skala ini)
-- Untuk update broker/holding (`PUT`), UI belum disediakan karena fokus utama pada visualisasi data dan operasi tambah/hapus

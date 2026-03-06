@@ -1,31 +1,31 @@
 <template>
-  <div class="table-wrap">
-    <table>
+  <div class="mt-3 overflow-auto rounded-xl border border-slate-200 bg-white">
+    <table class="w-full min-w-[760px] border-collapse">
       <thead>
-        <tr>
-          <th>Ticker</th>
-          <th>Total Lot</th>
-          <th>Avg Price</th>
-          <th>Current Price</th>
-          <th>Market Value</th>
-          <th>P/L</th>
-          <th>P/L %</th>
-          <th>Weight</th>
+        <tr class="bg-slate-50 text-slate-500">
+          <th class="border-b border-slate-200 p-2 text-left text-xs">Ticker</th>
+          <th class="border-b border-slate-200 p-2 text-left text-xs">Total Lot</th>
+          <th class="border-b border-slate-200 p-2 text-left text-xs">Avg Price</th>
+          <th class="border-b border-slate-200 p-2 text-left text-xs">Current Price</th>
+          <th class="border-b border-slate-200 p-2 text-left text-xs">Market Value</th>
+          <th class="border-b border-slate-200 p-2 text-left text-xs">P/L</th>
+          <th class="border-b border-slate-200 p-2 text-left text-xs">P/L %</th>
+          <th class="border-b border-slate-200 p-2 text-left text-xs">Weight</th>
         </tr>
       </thead>
       <tbody>
         <tr v-if="!rows || rows.length === 0">
-          <td colspan="8">Tidak ada data ticker.</td>
+          <td colspan="8" class="p-3 text-sm text-slate-500">Tidak ada data ticker.</td>
         </tr>
         <tr v-else v-for="row in sortedRows" :key="row.ticker">
-          <td><strong>{{ row.ticker }}</strong></td>
-          <td>{{ formatNumber(row.total_lot, 0) }}</td>
-          <td>{{ formatCurrency(row.avg_price) }}</td>
-          <td>{{ formatCurrency(getCurrentPrice(row)) }}</td>
-          <td>{{ formatCurrency(getMarketValue(row)) }}</td>
-          <td :class="plClass(getProfitLoss(row))">{{ formatCurrency(getProfitLoss(row)) }}</td>
-          <td :class="plClass(getProfitPct(row))">{{ formatPercent(getProfitPct(row)) }}</td>
-          <td>{{ formatPercent(getWeight(row)) }}</td>
+          <td class="border-b border-slate-100 p-2 text-sm font-semibold">{{ row.ticker }}</td>
+          <td class="border-b border-slate-100 p-2 text-sm">{{ formatNumber(row.total_lot, 0) }}</td>
+          <td class="border-b border-slate-100 p-2 text-sm">{{ formatCurrency(row.avg_price) }}</td>
+          <td class="border-b border-slate-100 p-2 text-sm">{{ formatCurrency(getCurrentPrice(row)) }}</td>
+          <td class="border-b border-slate-100 p-2 text-sm">{{ formatCurrency(getMarketValue(row)) }}</td>
+          <td class="border-b border-slate-100 p-2 text-sm" :class="plClass(getProfitLoss(row))">{{ formatCurrency(getProfitLoss(row)) }}</td>
+          <td class="border-b border-slate-100 p-2 text-sm" :class="plClass(getProfitPct(row))">{{ formatPercent(getProfitPct(row)) }}</td>
+          <td class="border-b border-slate-100 p-2 text-sm">{{ formatPercent(getWeight(row)) }}</td>
         </tr>
       </tbody>
     </table>
@@ -52,17 +52,12 @@ const sortedRows = computed(() => {
 })
 
 const toNumber = (value) => Number(value || 0)
-
 const getShares = (row) => toNumber(row.total_lot) * 100
 
 const getCurrentPrice = (row) => {
   if (row.current_price != null) return toNumber(row.current_price)
-
   const shares = getShares(row)
-  if (shares > 0 && row.market_value != null) {
-    return toNumber(row.market_value) / shares
-  }
-
+  if (shares > 0 && row.market_value != null) return toNumber(row.market_value) / shares
   return toNumber(row.avg_price)
 }
 
@@ -72,18 +67,12 @@ const getInvestedValue = (row) => {
 }
 
 const getMarketValue = (row) => {
-  if (row.current_price != null) {
-    return getShares(row) * getCurrentPrice(row)
-  }
-
+  if (row.current_price != null) return getShares(row) * getCurrentPrice(row)
   if (row.market_value != null) return toNumber(row.market_value)
-
   return getInvestedValue(row)
 }
 
-const getProfitLoss = (row) => {
-  return getMarketValue(row) - getInvestedValue(row)
-}
+const getProfitLoss = (row) => getMarketValue(row) - getInvestedValue(row)
 
 const getProfitPct = (row) => {
   const invested = getInvestedValue(row)

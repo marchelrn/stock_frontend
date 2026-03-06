@@ -22,7 +22,7 @@ export function useFormatters() {
   }
 
   const plClass = (value) => {
-    return Number(value || 0) >= 0 ? 'positive' : 'negative'
+    return Number(value || 0) >= 0 ? 'text-emerald-700 font-semibold' : 'text-rose-700 font-semibold'
   }
 
   return {

@@ -1,40 +1,30 @@
 <template>
-  <div class="table-wrap compact">
-    <table>
+  <div class="mt-3 overflow-auto rounded-xl border border-slate-200 bg-white">
+    <table class="w-full min-w-[620px] border-collapse">
       <thead>
-        <tr>
-          <th>Ticker</th>
-          <th>Lot</th>
-          <th>Avg Price</th>
-          <th>Broker</th>
-          <th>ID</th>
-          <th>Actions</th>
+        <tr class="bg-slate-50 text-slate-500">
+          <th class="border-b border-slate-200 p-2 text-left text-xs">Ticker</th>
+          <th class="border-b border-slate-200 p-2 text-left text-xs">Lot</th>
+          <th class="border-b border-slate-200 p-2 text-left text-xs">Avg Price</th>
+          <th class="border-b border-slate-200 p-2 text-left text-xs">Broker</th>
+          <th class="border-b border-slate-200 p-2 text-left text-xs">ID</th>
+          <th class="border-b border-slate-200 p-2 text-left text-xs">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr v-if="!holdings || holdings.length === 0">
-          <td colspan="6">Belum ada holding.</td>
+          <td colspan="6" class="p-3 text-sm text-slate-500">Belum ada holding.</td>
         </tr>
         <tr v-else v-for="holding in holdings" :key="holding.id || `${holding.ticker}-${holding.broker_id}`">
-          <td><strong>{{ holding.ticker }}</strong></td>
-          <td>{{ formatNumber(holding.lot, 0) }}</td>
-          <td>{{ formatCurrency(holding.avg_price) }}</td>
-          <td>{{ holding.broker_name }}</td>
-          <td><code>{{ holding.id }}</code></td>
-          <td>
-            <div class="action-group">
-              <button
-                class="action-btn buy"
-                @click="$emit('trade', { type: 'BUY', holding })"
-              > 
-                Buy
-              </button>
-              <button
-                class="action-btn sell"
-                @click="$emit('trade', { type: 'SELL', holding })"
-              >
-                Sell
-              </button>
+          <td class="border-b border-slate-100 p-2 text-sm font-semibold">{{ holding.ticker }}</td>
+          <td class="border-b border-slate-100 p-2 text-sm">{{ formatNumber(holding.lot, 0) }}</td>
+          <td class="border-b border-slate-100 p-2 text-sm">{{ formatCurrency(holding.avg_price) }}</td>
+          <td class="border-b border-slate-100 p-2 text-sm">{{ holding.broker_name }}</td>
+          <td class="border-b border-slate-100 p-2 text-sm"><code>{{ holding.id }}</code></td>
+          <td class="border-b border-slate-100 p-2 text-sm">
+            <div class="flex gap-2">
+              <button class="rounded-md bg-teal-700 px-2 py-1 text-xs font-semibold text-white hover:bg-teal-800" @click="$emit('trade', { type: 'BUY', holding })">Buy</button>
+              <button class="rounded-md bg-rose-700 px-2 py-1 text-xs font-semibold text-white hover:bg-rose-800" @click="$emit('trade', { type: 'SELL', holding })">Sell</button>
             </div>
           </td>
         </tr>

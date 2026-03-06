@@ -1,15 +1,16 @@
 <template>
-  <form class="config-form" @submit.prevent="handleSubmit">
-    <label for="base-url">Base URL API</label>
-    <div class="config-row">
-      <input 
-        id="base-url" 
-        v-model="url" 
-        type="url" 
+  <form class="grid gap-2" @submit.prevent="handleSubmit">
+    <label for="base-url" class="text-sm text-slate-600">Base URL API</label>
+    <div class="flex flex-col gap-2 sm:flex-row">
+      <input
+        id="base-url"
+        v-model="url"
+        type="url"
         placeholder="{{ import.meta.env.VITE_API_URL }}"
-        required 
+        required
+        class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
       />
-      <button type="submit">Apply</button>
+      <button type="submit" class="rounded-lg bg-teal-700 px-3 py-2 text-sm font-semibold text-white hover:bg-teal-800">Apply</button>
     </div>
   </form>
 </template>

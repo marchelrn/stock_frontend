@@ -1,8 +1,8 @@
 <template>
-  <div class="kpi-grid" v-if="summary">
-    <article class="kpi" v-for="item in kpiItems" :key="item.label">
-      <label>{{ item.label }}</label>
-      <strong :class="item.class">{{ item.value }}</strong>
+  <div v-if="summary" class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <article v-for="item in kpiItems" :key="item.label" class="rounded-xl border border-slate-200 bg-white p-3">
+      <label class="block text-xs text-slate-500">{{ item.label }}</label>
+      <strong class="mt-1 block text-base" :class="item.class">{{ item.value }}</strong>
     </article>
   </div>
 </template>
@@ -21,7 +21,7 @@ const props = defineProps({
 const { formatCurrency, formatPercent, plClass } = useFormatters()
 const kpiItems = computed(() => {
   if (!props.summary) return []
-  
+
   return [
     { label: 'Total Portfolio', value: formatCurrency(props.summary.total_portfolio_value), class: '' },
     { label: 'Total Stock Value', value: formatCurrency(props.summary.total_stock_value), class: '' },

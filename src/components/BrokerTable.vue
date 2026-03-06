@@ -1,29 +1,24 @@
 <template>
-  <div class="table-wrap compact">
-    <table>
+  <div class="mt-3 overflow-auto rounded-xl border border-slate-200 bg-white">
+    <table class="w-full min-w-[560px] border-collapse">
       <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Cash</th>
-          <th></th>
+        <tr class="bg-slate-50 text-slate-500">
+          <th class="border-b border-slate-200 p-2 text-left text-xs">ID</th>
+          <th class="border-b border-slate-200 p-2 text-left text-xs">Name</th>
+          <th class="border-b border-slate-200 p-2 text-left text-xs">Cash</th>
+          <th class="border-b border-slate-200 p-2 text-left text-xs"></th>
         </tr>
       </thead>
-      <tbody> 
+      <tbody>
         <tr v-if="!brokers || brokers.length === 0">
-          <td colspan="4">Belum ada broker.</td>
+          <td colspan="4" class="p-3 text-sm text-slate-500">Belum ada broker.</td>
         </tr>
         <tr v-else v-for="broker in brokers" :key="broker.id">
-          <td><code>{{ broker.id }}</code></td>
-          <td>{{ broker.name }}</td>
-          <td>{{ formatCurrency(broker.cash) }}</td>
-          <td>
-            <button
-              class="action-btn delete"
-              @click="$emit('delete', broker.name)"
-            >
-              Delete
-            </button>
+          <td class="border-b border-slate-100 p-2 text-sm"><code>{{ broker.id }}</code></td>
+          <td class="border-b border-slate-100 p-2 text-sm">{{ broker.name }}</td>
+          <td class="border-b border-slate-100 p-2 text-sm">{{ formatCurrency(broker.cash) }}</td>
+          <td class="border-b border-slate-100 p-2 text-sm">
+            <button class="rounded-md bg-rose-700 px-2 py-1 text-xs font-semibold text-white hover:bg-rose-800" @click="$emit('delete', broker.name)">Delete</button>
           </td>
         </tr>
       </tbody>

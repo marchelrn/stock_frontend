@@ -228,6 +228,21 @@ export function usePortfolio() {
     }
   }
 
+  const addBrokerCash = async (broker, cash) => {
+    try {      
+      await api(`/broker/${broker.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ cash })
+      })
+      setStatus(`Cash sebesar Rp.${cash} berhasil ditambahkan ke broker ${broker.name} ${broker.id}.`)
+      await loadDashboard({ silent: true })
+      return true
+    } catch (error) {
+      setStatus(error.message, true)
+      return false
+    }
+  }
+
   const deleteBroker = async (name) => {
     try {
       await api(`/broker/${encodeURIComponent(name)}`, { method: 'DELETE' })
@@ -277,6 +292,7 @@ export function usePortfolio() {
     setStatus,
     loadDashboard,
     addBroker,
+    addBrokerCash,
     deleteBroker,
     createTransaction,
     fetchStockPrices

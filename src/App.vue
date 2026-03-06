@@ -139,6 +139,7 @@ const {
   isError,
   loadDashboard,
   addBroker,
+  addBrokerCash,
   deleteBroker,
   createTransaction,
   fetchStockPrices,
@@ -179,7 +180,7 @@ const handleAddBrokerCash = async ({ brokerId, cashAmount }) => {
     setStatus('Broker tidak valid. Pilih broker yang tersedia.', true)
     return
   }
-  await addBroker(broker.name, cashAmount)
+  await addBrokerCash(broker, cashAmount)
 }
 
 const handleDeleteBroker = async (name) => {

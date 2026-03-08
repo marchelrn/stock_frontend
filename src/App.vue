@@ -62,20 +62,11 @@
           <div class="flex items-center justify-between gap-2">
             <h2 class="text-xl font-semibold">Live Stock Prices</h2>
           </div>
-          <StockPrices :prices="state.stockPrices" @fetch="handleFetchStockPrices" />
-        </div>
-
-        <div class="rounded-xl border border-slate-200 bg-white p-3">
-          <h3 class="text-base font-semibold">Endpoint Used</h3>
-          <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-600">
-            <li><code>GET /brokers</code></li>
-            <li><code>POST /broker</code></li>
-            <li><code>DELETE /broker/:name</code></li>
-            <li><code>GET /stocks</code></li>
-            <li><code>GET /price/:ticker</code> (validasi BUY ticker)</li>
-            <li><code>POST /transaction</code> (BUY/SELL)</li>
-            <li><code>GET /prices?ticker=A,B,C</code> (optional)</li>
-          </ul>
+          <StockPrices
+            :prices="state.liveStockPrices"
+            @fetch="handleFetchStockPrices"
+            @clear="handleClearLiveStockPrices"
+          />
         </div>
       </section>
     </main>
@@ -139,9 +130,11 @@ const {
   isError,
   loadDashboard,
   addBroker,
+  addBrokerCash,
   deleteBroker,
   createTransaction,
   fetchStockPrices,
+  clearLiveStockPrices,
   setStatus
 } = usePortfolio()
 
@@ -179,7 +172,7 @@ const handleAddBrokerCash = async ({ brokerId, cashAmount }) => {
     setStatus('Broker tidak valid. Pilih broker yang tersedia.', true)
     return
   }
-  await addBroker(broker.name, cashAmount)
+  await addBrokerCash(broker, cashAmount)
 }
 
 const handleDeleteBroker = async (name) => {
@@ -249,6 +242,10 @@ const handleFetchStockPrices = async (tickers) => {
     return
   }
   await fetchStockPrices(tickers)
+}
+
+const handleClearLiveStockPrices = () => {
+  clearLiveStockPrices()
 }
 
 onMounted(() => {

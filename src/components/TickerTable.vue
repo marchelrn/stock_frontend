@@ -23,7 +23,7 @@
           <td class="border-b border-slate-100 p-2 text-sm">{{ formatCurrency(row.avg_price) }}</td>
           <td class="border-b border-slate-100 p-2 text-sm">{{ formatCurrency(getCurrentPrice(row)) }}</td>
           <td class="border-b border-slate-100 p-2 text-sm">{{ formatCurrency(getMarketValue(row)) }}</td>
-          <td class="border-b border-slate-100 p-2 text-sm" :class="plClass(getProfitLoss(row))">{{ formatCurrency(getProfitLoss(row)) }}</td>
+          <td class="border-b border-slate-100 -ml-10 text-sm" :class="plClass(getProfitLoss(row))">{{ formatCurrency(getProfitLoss(row)) }}</td>
           <td class="border-b border-slate-100 p-2 text-sm" :class="plClass(getProfitPct(row))">{{ formatPercent(getProfitPct(row)) }}</td>
           <td class="border-b border-slate-100 p-2 text-sm">{{ formatPercent(getWeight(row)) }}</td>
         </tr>

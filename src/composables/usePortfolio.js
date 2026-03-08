@@ -256,7 +256,6 @@ export function usePortfolio() {
     }
   }
 
-  // transaction-first flow: no direct addHolding action
 
   const createTransaction = async (payload) => {
     try {
@@ -276,13 +275,31 @@ export function usePortfolio() {
   const fetchStockPrices = async (tickers) => {
     try {
       const res = await api(`/prices?ticker=${encodeURIComponent(tickers)}`)
+      if (!res.data || Object.keys(res.data).length === 0) {
+        setStatus(`Data Ticker ${tickers} tidak ditemukan.`, true)
+        return false
+      } 
+
       state.liveStockPrices = res.data || {}
       setStatus(`Harga saham untuk ${tickers} berhasil diambil.`)
       return true
     } catch (error) {
-      setStatus('Error Input.', true)
-      return false
+    if (error.message.includes('No data found') || error.response.status === 400) {
+      setStatus(`Ticker ${tickers} tidak terdaftar di sistem.`, true) 
+    }else if (error.response.status === 429 || error.message.includes('Limit exceeded')) {
+      setStatus('Terlalu banyak permintaan, silakan coba lagi nanti.', true)
     }
+     else if (error.message.includes('Network Error')) {
+      setStatus('Koneksi internet terputus.', true)
+    } else {
+      setStatus('Terjadi kesalahan teknis, silakan coba lagi.', true)
+    }
+    return false
+    }
+  }
+
+  const clearLiveStockPrices = () => {
+    state.liveStockPrices = {}
   }
 
   return {
@@ -295,6 +312,7 @@ export function usePortfolio() {
     addBrokerCash,
     deleteBroker,
     createTransaction,
-    fetchStockPrices
+    fetchStockPrices,
+    clearLiveStockPrices
   }
 }

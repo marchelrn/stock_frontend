@@ -62,7 +62,11 @@
           <div class="flex items-center justify-between gap-2">
             <h2 class="text-xl font-semibold">Live Stock Prices</h2>
           </div>
-          <StockPrices :prices="state.liveStockPrices" @fetch="handleFetchStockPrices" />
+          <StockPrices
+            :prices="state.liveStockPrices"
+            @fetch="handleFetchStockPrices"
+            @clear="handleClearLiveStockPrices"
+          />
         </div>
       </section>
     </main>
@@ -130,6 +134,7 @@ const {
   deleteBroker,
   createTransaction,
   fetchStockPrices,
+  clearLiveStockPrices,
   setStatus
 } = usePortfolio()
 
@@ -232,11 +237,15 @@ const submitTradeModal = async () => {
 }
 
 const handleFetchStockPrices = async (tickers) => {
-  // if (!tickers) {
-  //   setStatus('Masukkan minimal satu ticker.', true)
-  //   return
-  // }
+  if (!tickers) {
+    setStatus('Masukkan minimal satu ticker.', true)
+    return
+  }
   await fetchStockPrices(tickers)
+}
+
+const handleClearLiveStockPrices = () => {
+  clearLiveStockPrices()
 }
 
 onMounted(() => {

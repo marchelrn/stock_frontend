@@ -52,7 +52,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['fetch'])
+const emit = defineEmits(['fetch', 'clear'])
 
 const { formatNumber, formatPercent, plClass } = useFormatters()
 
@@ -79,7 +79,7 @@ const handleSubmit = () => {
 
 const handleClear = () => {
   tickers.value = ''
-  emit('fetch', '')
+  emit('clear')
 }
 
   

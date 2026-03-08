@@ -280,13 +280,13 @@ export function usePortfolio() {
         return false
       } 
 
-      state.liveStockPrice  s = res.data || {}
+      state.liveStockPrices = res.data || {}
       setStatus(`Harga saham untuk ${tickers} berhasil diambil.`)
       return true
     } catch (error) {
     if (error.message.includes('No data found') || error.response.status === 400) {
       setStatus(`Ticker ${tickers} tidak terdaftar di sistem.`, true) 
-    }else if (error.response.status === 429 || error.message.includes('Limit exceeded')) {
+    }else if (error.response.status === 429 || error.message.includes('Too Many Requests')) {
       setStatus('Terlalu banyak permintaan, silakan coba lagi nanti.', true)
     }
      else if (error.message.includes('Network Error')) {

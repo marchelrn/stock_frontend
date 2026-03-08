@@ -280,7 +280,7 @@ export function usePortfolio() {
         return false
       } 
 
-      state.liveStockPrices = res.data || {}
+      state.liveStockPrice  s = res.data || {}
       setStatus(`Harga saham untuk ${tickers} berhasil diambil.`)
       return true
     } catch (error) {

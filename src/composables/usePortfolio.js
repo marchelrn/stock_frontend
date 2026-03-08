@@ -6,7 +6,8 @@ const state = reactive({
   summary: null,
   brokers: [],
   holdings: [],
-  stockPrices: {}
+  stockPrices: {},
+  liveStockPrices: {}
 })
 
 const status = ref('')
@@ -275,12 +276,11 @@ export function usePortfolio() {
   const fetchStockPrices = async (tickers) => {
     try {
       const res = await api(`/prices?ticker=${encodeURIComponent(tickers)}`)
-      state.stockPrices = res.data || {}
-      state.summary = buildSummary(state.brokers, state.holdings, state.stockPrices)
+      state.liveStockPrices = res.data || {}
       setStatus(`Harga saham untuk ${tickers} berhasil diambil.`)
       return true
     } catch (error) {
-      setStatus('Endpoint /prices belum tersedia di backend ini.', true)
+      setStatus('Error Input.', true)
       return false
     }
   }

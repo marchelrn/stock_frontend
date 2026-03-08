@@ -8,7 +8,8 @@
         required
         class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
       />
-      <button type="submit" class="rounded-lg bg-teal-700 px-3 py-2 text-sm font-semibold text-white hover:bg-teal-800">Get Prices</button>
+      <button type="submit" class="rounded-lg bg-teal-700 px-2 py-2 text-xs font-semibold text-white hover:bg-teal-800">Get Prices</button>
+      <button type="button" class="rounded-lg bg-slate-500 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-600" @click="handleClear">Clear</button>
     </form>
     <div class="mt-3 overflow-auto rounded-xl border border-slate-200 bg-white">
       <table class="w-full min-w-[560px] border-collapse">
@@ -60,6 +61,7 @@ const tickers = ref('')
 const entries = computed(() => Object.values(props.prices || {}))
 
 const sortedEntries = computed(() => {
+  if (!entries.value) return []
   return [...entries.value].sort((a, b) => a.ticker.localeCompare(b.ticker))
 })
 
@@ -74,4 +76,11 @@ const handleSubmit = () => {
     emit('fetch', tickerList)
   }
 }
+
+const handleClear = () => {
+  tickers.value = ''
+  emit('fetch', '')
+}
+
+  
 </script>

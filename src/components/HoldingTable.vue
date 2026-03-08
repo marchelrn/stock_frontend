@@ -7,7 +7,6 @@
           <th class="border-b border-slate-200 p-2 text-left text-xs">Lot</th>
           <th class="border-b border-slate-200 p-2 text-left text-xs">Avg Price</th>
           <th class="border-b border-slate-200 p-2 text-left text-xs">Broker</th>
-          <th class="border-b border-slate-200 p-2 text-left text-xs">ID</th>
           <th class="border-b border-slate-200 p-2 text-left text-xs">Actions</th>
         </tr>
       </thead>
@@ -20,7 +19,6 @@
           <td class="border-b border-slate-100 p-2 text-sm">{{ formatNumber(holding.lot, 0) }}</td>
           <td class="border-b border-slate-100 p-2 text-sm">{{ formatCurrency(holding.avg_price) }}</td>
           <td class="border-b border-slate-100 text-sm">{{ holding.broker_name }}</td>
-          <td class="border-b border-slate-100 p-2  text-sm"><code>{{ holding.id }}</code></td>
           <td class="border-b border-slate-100 p-2 text-sm">
             <div class="flex gap-2">
               <button class="rounded-md bg-teal-700 px-2 py-1 text-xs font-semibold text-white hover:bg-teal-800" @click="$emit('trade', { type: 'BUY', holding })">Buy</button>

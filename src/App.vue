@@ -105,6 +105,32 @@
         </form>
       </div>
     </div>
+
+    <div v-if="confirm.open" class="fixed inset-0 z-50 grid place-items-center bg-slate-900/50 p-4" @click="closeConfirmModal">
+      <div class="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl" @click.stop>
+        <div class="mb-2 flex items-center justify-between">
+          <h3 class="text-lg font-semibold">{{ confirm.title }}</h3>
+          <!-- <button class="rounded p-1 text-slate-500 hover:bg-slate-50" @click="closeConfirmModal">✕</button> -->
+        </div>
+        <p class="text-sm text-slate-600">{{ confirm.message }}</p>
+        <div class="mt-4 flex justify-end gap-2">
+          <button
+            type="button"
+            class="rounded-lg bg-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-300"
+            @click="closeConfirmModal"
+          >
+            Batal
+          </button>
+          <button
+            type="button"
+            class="rounded-lg bg-rose-700 px-3 py-2 text-sm font-semibold text-white hover:bg-rose-800"
+            @click="confirmDeleteBroker"
+          >
+            Hapus
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -139,6 +165,13 @@ const {
 } = usePortfolio()
 
 const { formatCurrency } = useFormatters()
+
+const confirm = reactive({
+  open: false,
+  title: '',
+  message: '',
+  onConfirm: null
+})
 
 const tradeModal = reactive({
   open: false,
@@ -176,7 +209,28 @@ const handleAddBrokerCash = async ({ brokerId, cashAmount }) => {
 }
 
 const handleDeleteBroker = async (name) => {
-  await deleteBroker(name)
+  confirm.open = true
+  confirm.title = 'Konfirmasi Penghapusan Broker'
+  confirm.message = `Apakah Anda yakin ingin menghapus broker "${name}"?`
+  confirm.onConfirm = async () => {
+    await deleteBroker(name)
+    closeConfirmModal()
+  }
+}
+
+const closeConfirmModal = () => {
+  confirm.open = false
+  confirm.title = ''
+  confirm.message = ''
+  confirm.onConfirm = null
+}
+
+const confirmDeleteBroker = async () => {
+  if (typeof confirm.onConfirm === 'function') {
+    await confirm.onConfirm()
+    return
+  }
+  closeConfirmModal()
 }
 
 const handleAddTransaction = async (payload) => {
